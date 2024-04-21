@@ -1,5 +1,6 @@
 import { Client, GatewayIntentBits } from "discord.js";
 import dotenv from "dotenv";
+import http from "http";
 dotenv.config({ path: ".env" });
 // bot needs a client to communicate with Discord servers and users.
 const client = new Client({
@@ -10,6 +11,19 @@ const client = new Client({
     GatewayIntentBits.MessageContent,
   ],
 });
+
+//port for deployment
+// Handle incoming HTTP requests to satisfy Render's requirements
+const server = http.createServer((req, res) => {
+  res.writeHead(200, { "Content-Type": "text/plain" });
+  res.end("Discord bot is running");
+});
+
+// Listen on a port for incoming HTTP requests
+server.listen(process.env.PORT || 3000, () => {
+  console.log(`Server is running on port ${process.env.PORT || 3000}`);
+});
+
 
 //Letting out bot client handle the messages
 client.on("messageCreate", (message) => {
